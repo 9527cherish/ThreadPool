@@ -1,1 +1,0 @@
-/usr/bin/g++   -Wall -Wextra -pedantic  -Wall -Wextra -pedantic -g  -rdynamic CMakeFiles/threadTest.dir/main.o  -o ../../test/threadTest   -L/home/wj/Code/SDL2__Game/ThreadPool/lib  -Wl,-rpath,/home/wj/Code/SDL2__Game/ThreadPool/lib ../../lib/libThreadPool.so -lpthread 

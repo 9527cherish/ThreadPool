@@ -1,1 +1,0 @@
-/usr/bin/g++ -fPIC  -Wall -Wextra -pedantic  -Wall -Wextra -pedantic -g  -shared -Wl,-soname,libThreadPool.so -o ../../lib/libThreadPool.so CMakeFiles/ThreadPool.dir/Result.cpp.o CMakeFiles/ThreadPool.dir/Task.cpp.o CMakeFiles/ThreadPool.dir/Thread.cpp.o CMakeFiles/ThreadPool.dir/ThreadPool.cpp.o 

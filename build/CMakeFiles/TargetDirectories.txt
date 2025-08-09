@@ -1,8 +1,0 @@
-/home/wj/Code/SDL2__Game/ThreadPool/build/CMakeFiles/rebuild_cache.dir
-/home/wj/Code/SDL2__Game/ThreadPool/build/CMakeFiles/edit_cache.dir
-/home/wj/Code/SDL2__Game/ThreadPool/build/src/CMakeFiles/rebuild_cache.dir
-/home/wj/Code/SDL2__Game/ThreadPool/build/src/CMakeFiles/edit_cache.dir
-/home/wj/Code/SDL2__Game/ThreadPool/build/src/CMakeFiles/ThreadPool.dir
-/home/wj/Code/SDL2__Game/ThreadPool/build/test/CMakeFiles/rebuild_cache.dir
-/home/wj/Code/SDL2__Game/ThreadPool/build/test/CMakeFiles/edit_cache.dir
-/home/wj/Code/SDL2__Game/ThreadPool/build/test/CMakeFiles/threadTest.dir
