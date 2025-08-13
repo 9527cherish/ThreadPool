@@ -23,8 +23,8 @@ public:
         {
             sum = sum + i;
         }
+        std::this_thread::sleep_for(std::chrono::seconds(10));
         return sum;
-
     };
 
 private:

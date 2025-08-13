@@ -10,6 +10,7 @@
 #include <memory>
 #include <atomic>
 #include "Result.hpp"
+#include <unordered_map>
 
 
 enum class PoolMode {
@@ -19,6 +20,8 @@ enum class PoolMode {
 
 const uint TASK_QUEUS_MAX_THRESHHOLD = 1000;
 const uint THREAD_MAX_THRESHHOLD = 10;
+const uint THREAD_MAX_IDLE_TIME = 60;
+
 
 class ThreadPool
 {
@@ -30,7 +33,7 @@ public:
     void setMode(const PoolMode& mode);
     void setThreadNumber(const uint& threadNumber);
     void setTaskQueMaxThreshHold(const uint& maxThreshHold);
-    void setThreadMaxThreshHold(uint threadNum);
+    void setThreadMaxThreshHold(const uint& threadNum);
 
     Result submitTask(std::shared_ptr<Task> task);
 
@@ -45,7 +48,7 @@ public:
 
 private:
     // 线程函数，供线程使用
-    void threadFunc();
+    void threadFunc(uint threadId);
 
 private:
     // 线程数量
@@ -55,7 +58,7 @@ private:
     // 空闲线程数量
     std::atomic_int m_idleThreadNumber;
     // 线程队列
-    std::vector<std::unique_ptr<Thread>> m_threads;
+    std::unordered_map<uint, std::unique_ptr<Thread>> m_threads;
     // 线程队列上限阈值
     uint m_threadMaxThreshHold;
 
@@ -71,6 +74,7 @@ private:
     // 条件变量
     std::condition_variable m_notFull;
     std::condition_variable m_notEmpty;
+    std::condition_variable m_exitCondition;
 
     // 设置线程池模式
     PoolMode m_mode;
