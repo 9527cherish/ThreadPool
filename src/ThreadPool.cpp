@@ -21,7 +21,7 @@ ThreadPool::~ThreadPool()
     m_notEmpty.notify_all();
     std::unique_lock<std::mutex> lock(m_taskQueueMutex);
     std::this_thread::sleep_for(std::chrono::seconds(3));
-    m_exitCondition.wait(lock, [&]()->bool{return m_taskQueue.size() == 0;});
+    m_exitCondition.wait(lock, [&]()->bool{return m_threads.size() == 0;});
 }
 
 void ThreadPool::setMode(const PoolMode &mode)
@@ -153,8 +153,6 @@ void ThreadPool::threadFunc(uint threadId)
                 }
 
             }
-            
-            
             std::cout << "线程id为:" << std::this_thread::get_id() << "获取到任务" <<  std::endl;
             m_idleThreadNumber--;
             // 如果有任务，则从任务队列中取出一个任务执行
@@ -183,7 +181,9 @@ void ThreadPool::threadFunc(uint threadId)
     }
 
     m_threads.erase(threadId);
+    
     std::cout << "线程id为:" << std::this_thread::get_id() << "动态销毁" <<  std::endl;
+    std::cout << "m_threads.size"  << m_threads.size() << std::endl;
     m_exitCondition.notify_all();
     return;
 }
