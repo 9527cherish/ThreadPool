@@ -72,7 +72,7 @@ Result ThreadPool::submitTask(std::shared_ptr<Task> task)
     // lambda表达式  返回 false → 条件不满足 → 线程阻塞
     // 返回 true → 条件满足 → 不阻塞，直接返回
     if(!m_notFull.wait_for(lock, std::chrono::seconds(1), [&]()->bool{
-        return m_taskQueue.size() < TASK_QUEUS_MAX_THRESHHOLD;}))
+        return m_taskQueue.size() < m_taskQueMaxThreshHold;}))
         {
             std::cerr << "线程队列已满，任务提交失败" << std::endl;
             return Result(task, false);
