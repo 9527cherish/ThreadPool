@@ -146,7 +146,7 @@ void ThreadPool::threadFunc(uint threadId)
                 if(!m_poolCondition)
                 {
                     std::cout << "线程id为:" << std::this_thread::get_id() << "动态销毁" <<  std::endl;
-                    std::cout << "m_threads.size"  << m_threads.size() << std::endl;
+                    // std::cout << "m_threads.size"  << m_threads.size() << std::endl;
                     m_threads.erase(threadId);
                     m_exitCondition.notify_all();
                     return;
