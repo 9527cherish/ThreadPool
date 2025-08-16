@@ -1,27 +1,37 @@
 
 #include "ThreadPool.hpp"
 #include <chrono>
-#include "MyTask.hpp"
-#include "Result.hpp"
 
+int add(int a, int b)
+{
+    
+    std::this_thread::sleep_for(std::chrono::seconds(5));
+    return a + b;
+}
+
+// float add(float a, float b, float c)
+// {
+    
+//     std::this_thread::sleep_for(std::chrono::seconds(5));
+//     return a + b + c;
+// }
 
 int main() {
     {
         ThreadPool threadPool;
         // threadPool.setMode(PoolMode::MODE_CACHED);
         threadPool.start();
-        Result sum1 =  threadPool.submitTask(std::make_shared<MyTask>(1, 100000000));
-        Result sum2 = threadPool.submitTask(std::make_shared<MyTask>(100000001, 200000000));
-        Result sum3 = threadPool.submitTask(std::make_shared<MyTask>(200000001, 300000000));
-        Result sum4 = threadPool.submitTask(std::make_shared<MyTask>(300000001, 400000000));
-        // threadPool.submitTask(std::make_shared<MyTask>(400000000, 500000000));
-        // threadPool.submitTask(std::make_shared<MyTask>(500000000, 600000000));
-        // threadPool.submitTask(std::make_shared<MyTask>(600000000, 700000000));
-        // threadPool.submitTask(std::make_shared<MyTask>(700000000, 800000000));
-        ULong sum = sum1.get().cast_<ULong>() + sum2.get().cast_<ULong>()
-                        + sum3.get().cast_<ULong>(); // + sum4.get().cast_<ULong>();
+        std::future<int> sum1 =  threadPool.submitTask(add, 10 , 20);
+        std::future<int> sum2 =  threadPool.submitTask(add, 10 , 20);
+        // std::future<float> sum3 =  threadPool.submitTask(add, 100.0 , 20.0, 30.0);
+        std::future<int> sum4 =  threadPool.submitTask(add, 10 , 20);
+        std::future<int> sum5 =  threadPool.submitTask(add, 10 , 20);
 
-        std::cout << "sum=" << sum << std::endl;
+        std::cout << "sum1=" << sum1.get() << std::endl;
+        std::cout << "sum2=" << sum2.get() << std::endl;
+        // std::cout << "sum3=" << sum3.get() << std::endl;
+        std::cout << "sum4=" << sum4.get() << std::endl;
+        std::cout << "sum5=" << sum5.get() << std::endl;
     }
     std::getchar();
     return 0;

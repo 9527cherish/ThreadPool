@@ -20,7 +20,7 @@ ThreadPool::~ThreadPool()
     m_poolCondition = false;
     m_notEmpty.notify_all();
     std::unique_lock<std::mutex> lock(m_taskQueueMutex);
-    std::this_thread::sleep_for(std::chrono::seconds(3));
+    // std::this_thread::sleep_for(std::chrono::seconds(3));
     m_exitCondition.wait(lock, [&]()->bool{return m_threads.size() == 0;});
 }
 
@@ -47,42 +47,6 @@ void ThreadPool::setThreadMaxThreshHold(const uint &threadNum)
         return;
 
     m_threadMaxThreshHold = threadNum;
-}
-
-Result ThreadPool::submitTask(std::shared_ptr<Task> task)
-{
-    m_taskSize++;
-    // 首先获取到锁
-    std::unique_lock<std::mutex> lock(m_taskQueueMutex);
-    if(PoolMode::MODE_CACHED == m_mode
-        && m_taskSize > m_idleThreadNumber
-        && (uint)m_CurrentThreadNumber <= m_threadMaxThreshHold)
-    {
-        // std::cout << m_taskSize << ", " <<  m_idleThreadNumber << std::endl;
-        auto ptr = std::make_unique<Thread>(std::bind(&ThreadPool::threadFunc, this, std::placeholders::_1));
-        uint threadId = ptr->threadId();
-        m_threads.emplace(threadId, std::move(ptr));
-        m_threads[threadId]->start();
-        m_CurrentThreadNumber++;
-        m_idleThreadNumber++;
-        std::cout << "动态创建线程" <<  std::endl;
-    }   
-
-    // 再判断该任务队列有没有塞满，如果任务队列满了，任务提交失败
-    // lambda表达式  返回 false → 条件不满足 → 线程阻塞
-    // 返回 true → 条件满足 → 不阻塞，直接返回
-    if(!m_notFull.wait_for(lock, std::chrono::seconds(1), [&]()->bool{
-        return m_taskQueue.size() < TASK_QUEUS_MAX_THRESHHOLD;}))
-        {
-            std::cerr << "线程队列已满，任务提交失败" << std::endl;
-            return Result(task, false);
-        }
-
-    // 如果没有满，任务提交成功，通知线程执行任务
-    m_taskQueue.emplace(task);
-
-    m_notEmpty.notify_all();
-    return Result(task);
 }
 
 void ThreadPool::start()
@@ -112,7 +76,7 @@ void ThreadPool::threadFunc(uint threadId)
     // 线程首先一直处于一个运行的状态，detach的线程在线程函数运行结束后会自动结束析构掉
     while(m_poolCondition)
     {
-        std::shared_ptr<Task> task;
+        Task task;
         {
             // 首先获取到锁，这个锁加锁的对象应该是任务队列
             std::unique_lock<std::mutex> lock(m_taskQueueMutex);
@@ -171,7 +135,7 @@ void ThreadPool::threadFunc(uint threadId)
         // 拿到任务后，就将队列的锁释放
         if(nullptr != task)
         {
-            task->execute();
+            task();
         }
 
         // 这里要++，任务执行完了
