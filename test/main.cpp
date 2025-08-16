@@ -30,6 +30,8 @@ int main() {
         std::cout << "sum1=" << sum1.get() << std::endl;
         std::cout << "sum2=" << sum2.get() << std::endl;
         // std::cout << "sum3=" << sum3.get() << std::endl;
+
+        
         std::cout << "sum4=" << sum4.get() << std::endl;
         std::cout << "sum5=" << sum5.get() << std::endl;
     }
